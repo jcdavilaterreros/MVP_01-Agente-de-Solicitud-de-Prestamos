@@ -1,0 +1,432 @@
+Actúa como un desarrollador full-stack senior especializado en UX conversacional, JavaScript y prototipado de agentes con LLM.
+
+Necesito que construyas una aplicación web funcional (MVP) para un **“Agente de Solicitud de Préstamos”** en una **web app** con landing page + formulario de solicitud + integración con modelo de lenguaje + pantalla de confirmación.
+
+# OBJETIVO DEL MVP
+Crear una experiencia web integrada donde:
+1) El usuario aterriza en una landing page atractiva.
+2) Inicia una solicitud de préstamo en un formulario progresivo de 4 pasos.
+3) La app envía los datos al modelo de lenguaje (GPT-4o mini) con el contexto del agente definido.
+4) La respuesta del modelo se muestra como una sugerencia humana, cálida, clara y accionable.
+5) El flujo finaliza con una pantalla de confirmación de solicitud.
+
+⚠️ IMPORTANTE:
+- Debes **mantener intacto** el problema, rol, límites y tipo de respuestas del agente de Sprint 1.
+- NO conviertas la experiencia en un formulario rígido; cuando el agente haga preguntas, debe sentirse como conversación casual.
+- El resultado debe sonar natural, no “texto generado por IA”.
+- La app debe ser un prototipo funcional, clara para demo en Replit.
+
+---
+
+# CONTEXTO DEL AGENTE (SPRINT 1) — NO MODIFICAR
+Usa este contexto como base para el comportamiento del modelo:
+
+## Problema que resuelve
+Reducir fricción en onboarding de créditos, disminuir abandonos y errores, y lograr expediente listo para evaluación con mínima intervención humana.
+
+## Rol del agente
+Asistente de onboarding de créditos que guía paso a paso, responde dudas, indica información/documentos, valida datos y prepara precalificación digital en casos de bajo riesgo.
+
+## Tono / personalidad
+- Cercano, empático, profesional.
+- Claro para clientes; más técnico si el usuario es ejecutivo.
+- Respuestas breves a medias.
+- Puede usar pasos numerados, checklists y resúmenes estructurados.
+
+## Tipo de respuestas esperadas
+- Guía paso a paso
+- Checklist/documentos personalizados
+- Observaciones claras (si falta algo)
+- Estado de solicitud (registro / observada / en evaluación / aprobada / rechazada)
+- Precalificación referencial (sin prometer aprobación)
+
+## Límites (obligatorios)
+- No prometer aprobación del préstamo
+- No tomar decisiones fuera de política crediticia
+- No dar asesoría legal/tributaria/inversión
+- Cumplir KYC/AML
+- Declarar limitaciones y pedir aclaraciones si falta información
+
+## Estilo de UX conversacional
+- Mensajes breves, cálidos, claros
+- Sensación de acompañamiento y confianza
+- No sonar robótico ni excesivamente formal
+- Explicar próximos pasos de forma accionable
+
+---
+
+# MODELO DE LENGUAJE
+Usar **gpt-4o-mini**.
+
+Implementa una función de backend o mock server endpoint (por ejemplo `/api/loan-agent`) que:
+1. Reciba los datos del formulario y contexto del flujo.
+2. Arme un prompt estructurado para el modelo.
+3. Llame al modelo.
+4. Devuelva una respuesta textual natural + sugerencias accionables.
+
+Si no se puede usar API real por credenciales, deja:
+- Integración preparada con variables de entorno (`OPENAI_API_KEY`)
+- Un modo fallback/mock con respuesta simulada realista para demo
+
+---
+
+# ARQUITECTURA TÉCNICA (MVP SIMPLE, REPLIT-FRIENDLY)
+Puedes usar una de estas opciones (elige la más simple y estable para Replit):
+- **Opción A (preferida):** HTML + Tailwind + JavaScript vanilla + Node/Express backend simple
+- **Opción B:** HTML/CSS/JS puro + mock local si no integras backend
+
+Requisitos:
+- Código organizado y comentado
+- Fácil de ejecutar en Replit
+- Sin dependencias externas críticas innecesarias
+- Si usas Tailwind por CDN, está permitido
+- Formularios sin recargar página (`preventDefault`)
+
+Estructura sugerida:
+- `index.html`
+- `styles.css` (si aplica)
+- `script.js`
+- `server.js` (si hay backend)
+- `.env.example`
+- `README.md` con instrucciones de ejecución
+
+---
+
+# ESTRUCTURA GENERAL DE LA WEB APP
+La aplicación debe tener:
+
+1. **Landing Page / Hero Section**
+2. **Formulario progresivo de 4 pasos**
+3. **Sección conversacional del agente (integrada al flujo)**
+4. **Pantalla de confirmación de solicitud**
+5. **Navegación fluida entre secciones (sin recarga)**
+
+---
+
+# LANDING PAGE (HERO SECTION)
+Diseña una landing atractiva y moderna con:
+
+## Contenido
+- Título principal: **"Tu préstamo ideal, en minutos"**
+- Subtítulo explicativo sobre el agente inteligente (en español, tono cálido y confiable)
+- Dos botones CTA:
+  - **"Solicitar Ahora"**
+  - **"Ver Requisitos"**
+- Indicadores de confianza:
+  - **98% aprobación**
+  - **24h respuesta**
+  - **0% comisiones ocultas**
+
+## Elemento visual
+- Ilustración visual de una **tarjeta de préstamo aprobado** con animación flotante
+- Decorativos geométricos (círculos con blur) en el fondo
+- Estética moderna y profesional
+
+## Fondo
+- Gradiente azul oscuro:
+  - `#0f172a` → `#1e3a5f`
+
+---
+
+# DISEÑO VISUAL
+## Paleta
+- Azul oscuro: `#0f172a`
+- Azul primario: `#3b82f6`
+- Cyan: `#06b6d4`
+- Blanco con transparencias (glass effect)
+- Verde para confirmación y CTA final
+
+## Tipografía
+- **DM Sans** (Google Fonts)
+
+## Efectos y estilo
+- Animaciones suaves
+- Glass-morphism en tarjetas
+- Glow pulse en botones principales
+- Inputs con focus state elegante
+- UI profesional, moderna, sobria y confiable (estilo banca digital)
+
+## Responsive
+Debe funcionar correctamente en:
+- móvil
+- tablet
+- desktop
+
+Enfoque mobile-first.
+
+---
+
+# FORMULARIO PROGRESIVO DE 4 PASOS
+
+## Reglas generales
+- Indicadores de progreso con 4 pasos numerados y líneas conectoras
+- Los pasos completados muestran checkmark (✓)
+- Botones “Anterior” / “Siguiente”
+- En el paso 4, el botón cambia a **“Enviar Solicitud”** (verde)
+- Validación por paso antes de avanzar
+- Todos los campos con `required`
+- Labels correctamente asociados
+- No recargar página
+- Guardar estado del formulario en memoria (JS)
+
+---
+
+## PASO 1: Tipo de Usuario y Producto
+Campos:
+- Radio buttons para seleccionar:
+  - Cliente Final
+  - Ejecutivo
+  (con íconos y estilos visuales claros)
+- Dropdown: Tipo de Producto de Crédito
+  - Consumo
+  - Libre Disponibilidad
+  - Capital de Trabajo
+  - Hipotecario
+  - Vehicular
+  - PYME
+
+UX:
+- Microcopy breve explicando que esto ayuda a personalizar la orientación del agente.
+
+---
+
+## PASO 2: Datos de Identificación (KYC)
+Campos:
+- Dropdown: Tipo de Documento
+  - DNI
+  - Carnet de Extranjería
+  - Pasaporte
+  - RUC
+- Input: Número de Documento
+- Input: Nombre Completo / Razón Social
+- Input: Correo Electrónico
+- Input: Teléfono de Contacto
+
+UX:
+- Validaciones básicas:
+  - email válido
+  - teléfono con longitud razonable
+  - documento no vacío
+
+---
+
+## PASO 3: Datos de la Solicitud
+Campos:
+- Input numérico: Monto Solicitado (con símbolo `$`)
+- Dropdown: Moneda
+  - USD
+  - PEN
+  - EUR
+- Dropdown: Plazo en meses
+  - 6, 12, 24, 36, 48, 60, 72
+- Dropdown: Tipo de Pago
+  - Mensuales
+  - Bimestrales
+  - Trimestrales
+  - Semestrales
+
+UX:
+- Ayuda contextual breve (“elige el plazo que mejor se ajuste a tu capacidad de pago”).
+
+---
+
+## PASO 4: Datos Económicos
+Campos:
+- Input numérico: Ingresos Mensuales Declarados (con símbolo `$`)
+- Dropdown: Actividad Económica
+  - Empleado Dependiente
+  - Independiente
+  - Empresario
+  - Jubilado
+  - Rentista
+- Input: Empresa Empleadora / Rubro de Negocio
+- Dropdown: Antigüedad Laboral
+  - Menos 6 meses
+  - 6-12
+  - 1-2 años
+  - 2-5 años
+  - Más de 5 años
+- Checkbox obligatorio:
+  - Aceptación de Términos y Condiciones
+  - Política de Privacidad
+
+UX:
+- Mostrar mensaje corto de confianza sobre protección de datos.
+
+---
+
+# EXPERIENCIA DEL AGENTE (INTEGRACIÓN CON LLM)
+Después de completar el formulario (o en un panel lateral al final del paso 4), mostrar una tarjeta / bloque conversacional del agente que:
+
+1. Reciba el payload del formulario
+2. Lo envíe al endpoint `/api/loan-agent`
+3. Muestre una respuesta del agente en tono humano, cálido y accionable
+
+## Qué debe responder el agente (formato esperado)
+La respuesta debe incluir, según aplique:
+- Saludo breve personalizado
+- Resumen corto de la solicitud
+- Próximos pasos
+- Checklist de documentos sugeridos (si corresponde)
+- Observaciones importantes (si hay datos incompletos o riesgos)
+- Aclaración de que es una orientación/precalificación referencial (sin prometer aprobación)
+
+## Estilo de la respuesta (muy importante)
+- Natural, humana, clara, cálida
+- Que parezca sugerencia de un asesor
+- No sonar a plantilla rígida
+- Sin frases tipo “como IA…”
+- En español (Perú), lenguaje claro y profesional
+
+---
+
+# PROMPT INTERNO PARA EL MODELO (IMPLEMENTAR EN CÓDIGO)
+Crea el prompt que se enviará al modelo usando:
+- Un **system prompt** (rol del agente y límites)
+- Un **user prompt** (datos del formulario)
+
+## Requisitos del system prompt
+Debe incluir:
+- Rol del agente (onboarding de créditos)
+- Problema que resuelve
+- Tono/persona
+- Límites (no prometer aprobación, KYC/AML, etc.)
+- Tipo de salida esperado (orientación clara, próxima acción, checklist si aplica)
+- Instrucción explícita para sonar natural y humano
+- Instrucción para preguntar de forma conversacional si faltan datos críticos (no interrogatorio)
+
+## Requisitos del user prompt
+Debe pasar datos estructurados del formulario como JSON legible, por ejemplo:
+- tipoUsuario
+- tipoProducto
+- tipoDocumento
+- nroDocumento
+- nombre
+- email
+- telefono
+- monto
+- moneda
+- plazoMeses
+- tipoPago
+- ingresosMensuales
+- actividadEconomica
+- empresaORubro
+- antiguedadLaboral
+- aceptaTyC
+
+También puedes incluir:
+- `stage: "post_form_submission"`
+- `canal: "web_app"`
+
+## Formato de salida recomendado del modelo (texto)
+Respuesta natural en español con secciones suaves (sin rigidez excesiva), por ejemplo:
+- breve saludo
+- resumen
+- próximos pasos
+- documentos sugeridos
+- observaciones
+- cierre empático
+
+No mostrar JSON al usuario final (solo texto).
+
+---
+
+# PANTALLA DE CONFIRMACIÓN
+Crear una pantalla final con:
+
+- Ícono grande con checkmark en círculo verde
+- Mensaje principal: **"¡Solicitud Enviada!"**
+- Texto explicativo: procesamiento en 24 horas
+- Número de solicitud único generado con formato:
+  - `SOL-2024-XXXXX`
+  (puedes usar año actual dinámico si prefieres: `SOL-YYYY-XXXXX`)
+- Botón:
+  - **"Nueva Solicitud"** (resetea todo y regresa al inicio/form)
+
+---
+
+# FUNCIONALIDADES JAVASCRIPT (OBLIGATORIAS)
+Implementar:
+- Navegación fluida entre secciones (Hero → Formulario → Confirmación)
+- Validación por paso
+- Actualización dinámica de indicadores de progreso
+- Generación de número de solicitud único
+- `preventDefault` en submit
+- Función para resetear formulario y estado
+- Llamada async al endpoint del agente (`fetch`)
+- Manejo de loading / error de respuesta del modelo
+
+## UX de estados
+Agregar estados visuales:
+- Cargando respuesta del agente (spinner o texto tipo “Estamos preparando tu orientación…”)
+- Error amigable si falla API
+- Reintentar
+
+---
+
+# ESTILOS ESPECIALES
+- Animación `float` (6s) para la ilustración de tarjeta
+- `pulse glow` en botones principales
+- Transiciones suaves en elementos interactivos
+- Inputs con `border-2` y `rounded-xl`
+- Cards con efecto glass (`rgba blanco + blur`)
+- Diferenciar secciones con color:
+  - azul para flujo principal
+  - verde para confirmación
+
+Asegurar buen rendimiento (animaciones suaves, no pesadas).
+
+---
+
+# ACCESIBILIDAD Y CALIDAD
+- Labels asociados correctamente (`for` / `id`)
+- Contraste suficiente
+- Navegación usable en móvil
+- Botones claros
+- Mensajes de error comprensibles
+- HTML5 semántico
+- Comentarios descriptivos en el código
+
+---
+
+# ENTREGABLES ESPERADOS (GENERA TODO EL CÓDIGO)
+Quiero que generes:
+1. `index.html`
+2. `styles.css` (si aplica) o estilos embebidos organizados
+3. `script.js`
+4. `server.js` (si implementas backend Node/Express)
+5. `.env.example`
+6. `README.md` con:
+   - cómo correr en Replit
+   - cómo configurar API key
+   - modo mock/fallback
+
+---
+
+# DETALLES ADICIONALES IMPORTANTES
+- Usa nombres de clases consistentes
+- Código limpio y modular
+- No dependas de frameworks complejos
+- Si usas Tailwind CDN, documenta claramente
+- Deja una variable/config para alternar:
+  - `USE_MOCK_AGENT = true/false`
+
+---
+
+# EJEMPLO DE COMPORTAMIENTO DE RESPUESTA DEL AGENTE (REFERENCIA DE TONO)
+La respuesta debe sonar así (solo como referencia de estilo, no copiar literal):
+“Gracias, Juan Carlos. Ya tengo los datos principales de tu solicitud para [tipo de crédito]. Con el monto y plazo que indicaste, el siguiente paso es validar algunos documentos básicos para continuar con la evaluación. Te recomiendo tener a la mano tu documento de identidad y sustento de ingresos. Si todo está conforme, tu solicitud puede pasar a revisión en menos de 24 horas. Importante: esta orientación es referencial y la aprobación final dependerá de la evaluación crediticia.”
+
+---
+
+# CRITERIO DE ÉXITO DEL MVP
+El prototipo se considera correcto si:
+- La landing es atractiva y funcional
+- El formulario de 4 pasos valida y navega bien
+- La app genera una solicitud y muestra confirmación
+- Existe integración real o mock con GPT-4o mini
+- La respuesta del agente se ve humana, clara y accionable
+- Todo funciona sin recargar página
+- Es demo-friendly en Replit
+
+Ahora genera el proyecto completo con el código necesario.
